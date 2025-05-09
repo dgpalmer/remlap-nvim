@@ -8,7 +8,6 @@ return {
         "cpp",
         "css",
         "bash",
-        "zsh",
         "gitignore",
         "go",
         "graphql",

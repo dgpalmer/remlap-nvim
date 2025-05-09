@@ -37,3 +37,11 @@ keymap.set("n", "<C-w><left>", "<C-w><")
 keymap.set("n", "<C-w><right>", "<C-w>>")
 keymap.set("n", "<C-w><up>", "<C-w>+")
 keymap.set("n", "<C-w><down>", "<C-w>-")
+
+keymap.set("n", "<leader>i", function()
+  require("craftzdog.lsp").toggleInlayHints()
+end)
+
+vim.api.nvim_create_user_command("ToggleAutoformat", function()
+  require("craftzdog.lsp").toggleAutoformat()
+end, {})
