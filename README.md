@@ -4,7 +4,7 @@ nvim config inspired by [craftzdog](https://github.com/craftzdog/dotfiles-public
 
 # dependencies
 
-- [nvim](https://github.com/neovim/neovim)
+- [nvim](https://github.com/neovim/neovim?tab=readme-ov-file#--documentation-chat)
 
 # installation
 
