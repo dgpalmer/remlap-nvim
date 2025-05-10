@@ -8,11 +8,11 @@ local keymap = vim.keymap
 local opts = { noremap = true, silent = true }
 
 -- Increment/decrement
-keymap.set("n", "+", "<C-a>")
+keymap.set("n", "+", "<C-t>")
 keymap.set("n", "-", "<C-x>")
 
 -- Select All
-keymap.set("n", "<C-a>", "gg<S-v>G")
+keymap.set("n", "<C-t>", "gg<S-v>G")
 
 -- Jumplist
 keymap.set("n", "<C-m>", "<C-i>", opts)
