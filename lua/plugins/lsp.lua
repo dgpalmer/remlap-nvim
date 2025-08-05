@@ -39,6 +39,11 @@ return {
             },
           },
         },
+        biome = {
+          root_dir = function(...)
+            return require("lspconfig.util").root_pattern("biome.json")(...)
+          end,
+        },
         tailwindcss = {
           root_dir = function(...)
             return require("lspconfig.util").root_pattern(".git")(...)
