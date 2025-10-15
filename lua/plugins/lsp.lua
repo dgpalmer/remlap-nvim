@@ -1,21 +1,4 @@
 return {
-  -- tools
-  {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        "stylua",
-        "selene",
-        "luacheck",
-        "shellcheck",
-        "shfmt",
-        "tailwindcss-language-server",
-        "typescript-language-server",
-        "css-lsp",
-      })
-    end,
-  },
-
   -- lsp servers
   {
     "neovim/nvim-lspconfig",
@@ -39,42 +22,14 @@ return {
             },
           },
         },
-        tailwindcss = {
-          root_dir = function(...)
-            return require("lspconfig.util").root_pattern(".git")(...)
-          end,
-        },
-        tsserver = {
-          root_dir = function(...)
-            return require("lspconfig.util").root_pattern(".git")(...)
-          end,
-          single_file_support = false,
+        eslint = {
           settings = {
-            typescript = {
-              inlayHints = {
-                includeInlayParameterNameHints = "literal",
-                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = false,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
-              },
-            },
-            javascript = {
-              inlayHints = {
-                includeInlayParameterNameHints = "all",
-                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
-              },
+            workingDirectories = { mode = "auto" },
+            format = {
+              autoFixOnSave = true,
             },
           },
         },
-        html = {},
         yamlls = {
           settings = {
             yaml = {
@@ -148,7 +103,22 @@ return {
           },
         },
       },
-      setup = {},
+      setup = {
+        eslint = function()
+          require("lazyvim.util").lsp.on_attach(function(client)
+            if client.name == "eslint" then
+              client.server.capabilities.documentFormattingProvider = true
+              vim.api.nvim_create_autocmd("BufWritePre", {
+                callback = function()
+                  vim.lsp.buf.format()
+                end,
+              })
+            elseif client.name == "tsserver" then
+              client.server_capabilities.documentFormattingProvider = false
+            end
+          end)
+        end,
+      },
     },
   },
   {
@@ -167,5 +137,31 @@ return {
         },
       })
     end,
+  },
+  {
+    "stevearc/conform.nvim",
+    event = "BufWritePre",
+    cmd = { "ConformInfo", "ConformFOrmat" },
+    opts = {
+      default_format_opts = {
+        timeout_ms = 3000,
+        async = false,
+        quiet = false,
+        lsp_format = "fallback",
+      },
+      formatters_by_ft = {
+        ["javascript"] = { "eslint", "biome", stop_after_first = true },
+        ["javascriptreact"] = { "eslint", "biome", stop_after_first = true },
+        ["typescript"] = { "eslint", "biome", stop_after_first = true },
+        ["typescriptreact"] = { "eslint", "biome", stop_after_first = true },
+      },
+      formatters = {
+        biome = {
+          condition = function(_, ctx)
+            return vim.fs.find({ "biome.json" }, { path = ctx.filename, upward = true })[1]
+          end,
+        },
+      },
+    },
   },
 }
