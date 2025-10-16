@@ -107,7 +107,7 @@ return {
         eslint = function()
           require("lazyvim.util").lsp.on_attach(function(client)
             if client.name == "eslint" then
-              client.server.capabilities.documentFormattingProvider = true
+              client.server_capabilities.documentFormattingProvider = true
               vim.api.nvim_create_autocmd("BufWritePre", {
                 callback = function()
                   vim.lsp.buf.format()
